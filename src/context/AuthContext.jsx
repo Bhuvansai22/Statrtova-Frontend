@@ -53,6 +53,9 @@ export const AuthProvider = ({ children }) => {
             setUser(userData);
             setIsAuthenticated(true);
 
+            // Small delay to ensure state updates propagate
+            await new Promise(resolve => setTimeout(resolve, 100));
+
             return { success: true, user: userData };
         } catch (error) {
             return {
@@ -74,6 +77,9 @@ export const AuthProvider = ({ children }) => {
 
             setUser(newUser);
             setIsAuthenticated(true);
+
+            // Small delay to ensure state updates propagate
+            await new Promise(resolve => setTimeout(resolve, 100));
 
             return { success: true, user: newUser };
         } catch (error) {

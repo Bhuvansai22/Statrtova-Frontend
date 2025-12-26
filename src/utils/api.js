@@ -28,11 +28,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401 || (error.response?.status === 404 && error.config.url?.includes('/auth/profile'))) {
-            // Unauthorized or User Not Found - clear token and redirect to login
+        if (error.response?.status === 401) {
+            // Unauthorized - clear token and let the app handle redirect
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/login';
+            // Don't use window.location.href - let React Router handle it
+            // The ProtectedRoute will redirect to login automatically
         }
         return Promise.reject(error);
     }

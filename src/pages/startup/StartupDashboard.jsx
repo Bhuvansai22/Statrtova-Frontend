@@ -27,9 +27,10 @@ const StartupDashboard = () => {
 
     const fetchDashboardData = async () => {
         try {
-            // Fetch all startups and find the one belonging to this user
-            const response = await startupAPI.getAll();
-            const userStartup = response.data.find(s => s.userId === user.id || s.userId === user._id);
+            // Fetch the startup directly by ID (user.roleDocumentId IS the startup's _id)
+            const startupId = user.roleDocumentId || user.id;
+            const response = await startupAPI.getById(startupId);
+            const userStartup = response.data;
 
             if (userStartup) {
                 setStartup(userStartup);
@@ -45,7 +46,10 @@ const StartupDashboard = () => {
             }
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
-            toast.error('Failed to load dashboard');
+            // Don't show error toast for new users who haven't set up profile yet
+            if (error.response?.status !== 404) {
+                toast.error('Failed to load dashboard');
+            }
         } finally {
             setLoading(false);
         }

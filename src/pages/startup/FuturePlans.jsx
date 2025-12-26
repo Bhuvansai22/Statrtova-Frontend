@@ -18,8 +18,9 @@ const FuturePlans = () => {
 
     const fetchStartup = async () => {
         try {
-            const response = await startupAPI.getAll();
-            const userStartup = response.data.find(s => s.userId === user.id || s.userId === user._id);
+            const startupId = user.roleDocumentId || user.id;
+            const response = await startupAPI.getById(startupId);
+            const userStartup = response.data;
             if (userStartup) {
                 setStartup(userStartup);
                 setFuturePlans(userStartup.futurePlans || '');
